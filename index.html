@@ -111,6 +111,43 @@
   .measure-form input{width:100%;margin-top:5px;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-size:16px;font-weight:700;text-align:center;outline:none}
   .measure-form input:focus{border-color:var(--accent)}
   .measure-form button{width:100%;padding:14px;border:0;border-radius:12px;background:var(--card2);border:1px solid var(--accent);color:var(--accent);font-size:15px;font-weight:800;cursor:pointer}
+  /* ---------- Streak + calendar ---------- */
+  .stat-row{display:flex;gap:8px;margin-bottom:12px}
+  .stat{flex:1;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 8px;text-align:center}
+  .stat b{display:block;font-size:22px;font-weight:800;line-height:1.1}
+  .stat span{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-top:4px;letter-spacing:.2px}
+  .stat.hot{border-color:var(--accent)}
+  .stat.hot b{color:var(--accent)}
+
+  .goal-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+  .goal-card .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .goal-card .top b{font-size:14.5px}
+  .goal-card .top span{font-size:12.5px;color:var(--muted);font-weight:700}
+  .goal-dots{display:flex;gap:8px}
+  .goal-dots i{flex:1;height:9px;border-radius:99px;background:var(--card2);border:1px solid var(--line)}
+  .goal-dots i.on{background:var(--green);border-color:var(--green)}
+
+  .cal{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:12px;overflow-x:auto}
+  .cal .months{display:flex;margin-left:18px;font-size:10.5px;color:var(--muted);font-weight:700;margin-bottom:4px}
+  .cal .grid{display:flex;gap:3px}
+  .cal .dow{display:flex;flex-direction:column;gap:3px;margin-right:5px}
+  .cal .dow span{height:14px;font-size:9.5px;color:var(--muted);font-weight:700;line-height:14px}
+  .cal .wk{display:flex;flex-direction:column;gap:3px}
+  .cal .d{width:14px;height:14px;border-radius:4px;background:var(--card2);border:1px solid var(--line)}
+  .cal .d.on{background:var(--green);border-color:var(--green)}
+  .cal .d.today{outline:2px solid var(--accent);outline-offset:1px}
+  .cal .d.future{opacity:.25}
+  .cal .legend{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:700;margin-top:10px}
+  .cal .legend i{width:12px;height:12px;border-radius:4px;background:var(--card2);border:1px solid var(--line);display:inline-block}
+  .cal .legend i.on{background:var(--green);border-color:var(--green)}
+
+  .nudge{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13.5px;font-weight:600;line-height:1.4}
+  .streak-banner{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:11px 14px;margin-bottom:12px;font-size:13.5px;font-weight:700}
+  .streak-banner b{color:var(--accent)}
+  .streak-banner .sep{color:var(--line)}
+
   .hist-item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:10px}
   .hist-item .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .hist-item .h b{font-size:15px}
@@ -432,7 +469,15 @@ function dayHTML(day){
   if(state.cardio[day.id]) doneSets++;
   const pct = Math.round(doneSets/totalSets*100);
 
+  const s = stats();
   let html = `
+    <div class="streak-banner">
+      🔥 <span>Streak <b>${s.streak}</b> ${s.streak===1?'week':'weeks'}</span>
+      <span class="sep">|</span>
+      <span>This week <b>${s.thisWeek}/${WEEKLY_GOAL}</b></span>
+      <span class="sep">|</span>
+      <span>Total <b>${s.total}</b></span>
+    </div>
     <div class="day-progress">
       <div class="bar"><i style="width:${pct}%"></i></div>
       <span>${doneSets}/${totalSets} sets</span>
@@ -543,9 +588,151 @@ function finishWorkout(dayId){
   state.cardio[dayId] = false;
   stopRest();
   save(); render();
-  toast("Workout saved to history 🏁");
+  const s = stats();
+  if(s.thisWeek >= WEEKLY_GOAL)      toast(`Week complete! 🔥 ${s.streak} week streak`);
+  else                                toast(`Logged 🏁 ${s.thisWeek}/${WEEKLY_GOAL} this week`);
 }
 
+/* ==================== STREAK / CONSISTENCY ====================
+   The program is 3 sessions a week, so a day-by-day streak would
+   break on every (planned) rest day. The streak counts WEEKS in
+   which the weekly goal was met; the current week never breaks it
+   while it is still in progress.
+=============================================================== */
+const WEEKLY_GOAL = 3;
+const CAL_WEEKS = 18;
+
+function dateKey(d){
+  const x = new Date(d);
+  return x.getFullYear() + "-" + String(x.getMonth()+1).padStart(2,"0") + "-" + String(x.getDate()).padStart(2,"0");
+}
+function startOfWeek(d){                 // weeks start on Monday
+  const x = new Date(d); x.setHours(0,0,0,0);
+  x.setDate(x.getDate() - ((x.getDay()+6)%7));
+  return x;
+}
+function addDays(d,n){ const x = new Date(d); x.setDate(x.getDate()+n); return x; }
+
+// every calendar day that has at least one finished workout
+function trainedDays(){
+  const m = new Map();
+  state.history.forEach(h=>{
+    const k = dateKey(h.date);
+    if(!m.has(k)) m.set(k, []);
+    m.get(k).push(h.dayTitle);
+  });
+  return m;
+}
+
+function stats(){
+  const days = trainedDays();
+  const today = new Date(); today.setHours(0,0,0,0);
+  const thisWeekStart = startOfWeek(today);
+
+  const perWeek = w => {           // distinct training days inside that week
+    let n = 0;
+    for(let i=0;i<7;i++) if(days.has(dateKey(addDays(w,i)))) n++;
+    return n;
+  };
+
+  const thisWeek = perWeek(thisWeekStart);
+
+  // current streak: walk back week by week
+  let streak = 0;
+  for(let i=0;;i++){
+    const n = perWeek(addDays(thisWeekStart, -7*i));
+    if(n >= WEEKLY_GOAL) streak++;
+    else if(i === 0) continue;     // this week is still running — doesn't break it
+    else break;
+    if(i > 260) break;
+  }
+
+  // best streak ever
+  let best = 0, run = 0;
+  if(days.size){
+    const first = startOfWeek(Math.min(...[...days.keys()].map(k=>new Date(k+"T00:00:00").getTime())));
+    for(let w = new Date(first); w <= thisWeekStart; w = addDays(w,7)){
+      const n = perWeek(w);
+      const isCurrent = w.getTime() === thisWeekStart.getTime();
+      if(n >= WEEKLY_GOAL || (isCurrent && n > 0 && streak > 0)) { run++; best = Math.max(best, run); }
+      else run = 0;
+    }
+  }
+  best = Math.max(best, streak);
+
+  // days since the last session
+  let since = null;
+  if(days.size){
+    const last = Math.max(...[...days.keys()].map(k=>new Date(k+"T00:00:00").getTime()));
+    since = Math.round((today - last) / 86400000);
+  }
+  return { streak, best, thisWeek, total: state.history.length, trainedDayCount: days.size, since, days };
+}
+
+function calendarHTML(s){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayKey = dateKey(today);
+  const start = addDays(startOfWeek(today), -7*(CAL_WEEKS-1));
+  const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+  let months = "", weeks = "", lastMonth = -1;
+  for(let w=0; w<CAL_WEEKS; w++){
+    const wStart = addDays(start, 7*w);
+    const m = wStart.getMonth();
+    months += `<span style="width:17px;flex:0 0 17px">${m!==lastMonth ? MON[m] : ""}</span>`;
+    lastMonth = m;
+
+    let col = "";
+    for(let i=0;i<7;i++){
+      const d = addDays(wStart, i), k = dateKey(d);
+      const on = s.days.has(k);
+      const cls = ["d", on?"on":"", k===todayKey?"today":"", d>today?"future":""].filter(Boolean).join(" ");
+      const title = on ? `${k} · ${s.days.get(k).join(", ")}` : k;
+      col += `<div class="${cls}" title="${title}"></div>`;
+    }
+    weeks += `<div class="wk">${col}</div>`;
+  }
+  return `
+    <div class="cal">
+      <div class="months">${months}</div>
+      <div style="display:flex">
+        <div class="dow"><span>M</span><span></span><span>W</span><span></span><span>F</span><span></span><span>S</span></div>
+        <div class="grid">${weeks}</div>
+      </div>
+      <div class="legend"><i></i> rest &nbsp; <i class="on"></i> trained &nbsp;
+        <span style="color:var(--accent)">▢ today</span></div>
+    </div>`;
+}
+
+function streakHTML(){
+  const s = stats();
+  const dots = Array.from({length:WEEKLY_GOAL}, (_,i)=>`<i class="${i<s.thisWeek?'on':''}"></i>`).join("");
+  const extra = s.thisWeek > WEEKLY_GOAL ? ` +${s.thisWeek-WEEKLY_GOAL}` : "";
+
+  let nudge = "";
+  if(s.total === 0)
+    nudge = `<div class="nudge">🎯 Finish your first workout and this calendar starts filling up.</div>`;
+  else if(s.since >= 4)
+    nudge = `<div class="nudge">⏰ ${s.since} days since your last session — get one in today to keep the streak alive.</div>`;
+  else if(s.thisWeek >= WEEKLY_GOAL)
+    nudge = `<div class="nudge">✅ Weekly goal done. Anything extra this week is a bonus.</div>`;
+  else if(s.thisWeek === WEEKLY_GOAL - 1)
+    nudge = `<div class="nudge">💪 One more session and this week counts toward your streak.</div>`;
+
+  return `
+    <div class="stat-row">
+      <div class="stat ${s.streak>0?'hot':''}"><b>${s.streak}</b><span>🔥 WEEK STREAK</span></div>
+      <div class="stat"><b>${s.best}</b><span>BEST STREAK</span></div>
+      <div class="stat"><b>${s.total}</b><span>WORKOUTS</span></div>
+      <div class="stat"><b>${s.trainedDayCount}</b><span>DAYS TRAINED</span></div>
+    </div>
+    <div class="goal-card">
+      <div class="top"><b>This week</b><span>${s.thisWeek}/${WEEKLY_GOAL} sessions${extra}</span></div>
+      <div class="goal-dots">${dots}</div>
+    </div>
+    ${nudge}
+    ${calendarHTML(s)}`;
+}
 /* ============================ HISTORY ============================ */
 function fmtDate(iso){
   return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}) +
@@ -557,7 +744,9 @@ function historyHTML(){
   const hist = state.history;
 
   let html = `
-    <div class="section-title">📏 Body Measurements — ${uName}</div>
+    <div class="section-title">🔥 Consistency — ${uName}</div>
+    ${streakHTML()}
+    <div class="section-title">📏 Body Measurements</div>
     <div class="measure-form">
       <div class="row">
         <label>Body weight (kg)<input id="mWeight" inputmode="decimal" placeholder="96"></label>
