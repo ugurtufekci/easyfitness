@@ -36,7 +36,10 @@
   .picker p{color:var(--muted);font-size:14px;margin-top:-6px;text-align:center}
   .picker button{width:100%;max-width:340px;padding:20px;border-radius:16px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:18px;font-weight:800;cursor:pointer}
   .picker button:active{border-color:var(--accent)}
-  .picker button span{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-top:4px}
+  .picker button{background:var(--accent);border-color:var(--accent);color:#181004}
+  .name-input{width:100%;max-width:340px;height:56px;border-radius:16px;border:1px solid var(--line);
+    background:var(--card);color:var(--text);font-size:18px;font-weight:700;text-align:center;outline:none}
+  .name-input:focus{border-color:var(--accent)}
   .user-info{font-size:12.5px;color:var(--muted);text-align:right;margin-top:-6px;margin-bottom:8px;padding-right:4px}
 
   nav.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
@@ -221,7 +224,6 @@
     <h1>Easy<span>Fitness</span></h1>
     <button class="profile-chip" id="profileChip" onclick="openPicker()"></button>
   </div>
-  <div class="user-info" id="userInfo"></div>
   <nav class="tabs" id="tabs"></nav>
 </header>
 
@@ -261,17 +263,17 @@ const PROGRAM = {
       id: "day1", short: "Day 1", title: "Push", subtitle: "Chest • Shoulders • Triceps",
       cardio: "15–20 min incline walk (8–12% incline)",
       exercises: [
-        { id:"bench",      name:"Barbell Bench Press",            sets:4, reps:"6–8",   anim:"bench",      db:false, w:{ugur:"65-70", onur:"57.5-62.5"},
+        { id:"bench",      name:"Barbell Bench Press",            sets:4, reps:"6–8",   anim:"bench",      db:false, w:"65-70",
           cue:"Elbows ~45° to the torso, not flared to 90°. Shoulder blades pinned back, slight arch, bar to lower chest." },
-        { id:"incline",    name:"Incline Dumbbell Press",         sets:3, reps:"8–10",  anim:"incline",    db:true,  w:{ugur:"22.5",  onur:"20"},
+        { id:"incline",    name:"Incline Dumbbell Press",         sets:3, reps:"8–10",  anim:"incline",    db:true,  w:"22.5",
           cue:"Bench at 30–45°. Steeper turns it into a shoulder press. Lower to upper chest, elbows under the wrists." },
-        { id:"shpress",    name:"Seated Dumbbell Shoulder Press", sets:3, reps:"8–10",  anim:"press",      db:true,  w:{ugur:"20",    onur:"17.5"},
+        { id:"shpress",    name:"Seated Dumbbell Shoulder Press", sets:3, reps:"8–10",  anim:"press",      db:true,  w:"20",
           cue:"Upper arms ~30° in front of the body, not straight out to the sides. Ribs down, don't arch the lower back." },
-        { id:"latraise",   name:"Lateral Raise",                  sets:4, reps:"12–15", anim:"lateral",    db:true,  w:{ugur:"10",    onur:"9"},
+        { id:"latraise",   name:"Lateral Raise",                  sets:4, reps:"12–15", anim:"lateral",    db:true,  w:"10",
           cue:"Slight forward lean, elbows softly bent ~10–20° and kept above the wrists. Stop at shoulder height, no swinging." },
-        { id:"fly",        name:"Cable Fly",                      sets:3, reps:"12–15", anim:"fly",        db:false, w:{ugur:"40-45", onur:"35-40"},
+        { id:"fly",        name:"Cable Fly",                      sets:3, reps:"12–15", anim:"fly",        db:false, w:"40-45",
           cue:"Small forward lean, elbow angle stays fixed at ~20° the whole rep. Hug motion — chest opens, shoulders stay down." },
-        { id:"pushdown",   name:"Rope Triceps Pushdown",          sets:3, reps:"10–12", anim:"pushdown",   db:false, w:{ugur:"40-45", onur:"35-40"},
+        { id:"pushdown",   name:"Rope Triceps Pushdown",          sets:3, reps:"10–12", anim:"pushdown",   db:false, w:"40-45",
           cue:"Slight forward lean, upper arms glued to the ribs. Only the elbow moves, from ~90° to full lockout." },
       ]
     },
@@ -279,17 +281,17 @@ const PROGRAM = {
       id: "day2", short: "Day 2", title: "Pull", subtitle: "Back • Lats • Biceps",
       cardio: "15–20 min intervals (rower/bike: 1 min fast / 2 min slow)",
       exercises: [
-        { id:"pulldown",   name:"Lat Pulldown (wide grip)",       sets:4, reps:"8–10",  anim:"pulldown",   db:false, w:{ugur:null, onur:null},
+        { id:"pulldown",   name:"Lat Pulldown (wide grip)",       sets:4, reps:"8–10",  anim:"pulldown",   db:false, w:null,
           cue:"Lean back ~15–20° and hold it — don't rock. Bar to collarbone, elbows drive down and back, chest up." },
-        { id:"bbrow",      name:"Barbell Row",                    sets:4, reps:"8–10",  anim:"row",        db:false, w:{ugur:null, onur:null},
+        { id:"bbrow",      name:"Barbell Row",                    sets:4, reps:"8–10",  anim:"row",        db:false, w:null,
           cue:"Hinge to ~45° torso angle, back flat, knees softly bent. Pull to the belly button, elbows ~45° — no jerking up." },
-        { id:"cablerow",   name:"Seated Cable Row",               sets:3, reps:"10–12", anim:"seatedrow",  db:false, w:{ugur:null, onur:null},
+        { id:"cablerow",   name:"Seated Cable Row",               sets:3, reps:"10–12", anim:"seatedrow",  db:false, w:null,
           cue:"Torso stays near vertical (max ~10° sway). Knees slightly bent, pull to the navel, squeeze the shoulder blades." },
-        { id:"straightarm",name:"Straight-Arm Pulldown",          sets:3, reps:"12–15", anim:"straightarm",db:false, w:{ugur:null, onur:null},
+        { id:"straightarm",name:"Straight-Arm Pulldown",          sets:3, reps:"12–15", anim:"straightarm",db:false, w:null,
           cue:"Hinge forward ~30° at the hips — do NOT stand upright. Arms nearly straight (~10° elbow), only the shoulder moves; sweep the bar to the thighs." },
-        { id:"facepull",   name:"Face Pull",                      sets:3, reps:"15",    anim:"facepull",   db:false, w:{ugur:null, onur:null},
+        { id:"facepull",   name:"Face Pull",                      sets:3, reps:"15",    anim:"facepull",   db:false, w:null,
           cue:"Cable at face height. Pull to the forehead with elbows HIGH, at shoulder level, and rotate hands back — like a double biceps pose." },
-        { id:"hammercurl", name:"Dumbbell Hammer Curl",           sets:3, reps:"10–12", anim:"curl",       db:true,  w:{ugur:"15", onur:"12.5-14"},
+        { id:"hammercurl", name:"Dumbbell Hammer Curl",           sets:3, reps:"10–12", anim:"curl",       db:true,  w:"15",
           cue:"Elbows pinned at the ribs, neutral grip. Torso doesn't swing — the elbow travels from 180° to ~40°." },
       ]
     },
@@ -297,27 +299,22 @@ const PROGRAM = {
       id: "day3", short: "Day 3", title: "Legs + Shoulders", subtitle: "Legs • Shoulders • Core",
       cardio: "15–20 min incline walk",
       exercises: [
-        { id:"squat",      name:"Squat",                          sets:4, reps:"8–10",  anim:"squat",      db:false, w:{ugur:null, onur:null},
+        { id:"squat",      name:"Squat",                          sets:4, reps:"8–10",  anim:"squat",      db:false, w:null,
           cue:"Hips and knees bend together, chest up. Go to at least 90° knee bend (thigh parallel). Knees track over the toes, heels stay down." },
-        { id:"rdl",        name:"Romanian Deadlift",              sets:3, reps:"10–12", anim:"rdl",        db:false, w:{ugur:null, onur:null},
+        { id:"rdl",        name:"Romanian Deadlift",              sets:3, reps:"10–12", anim:"rdl",        db:false, w:null,
           cue:"Hip hinge, NOT a squat: push the hips back, knees stay at a soft ~15° bend. Back flat, bar slides along the legs, stop at mid-shin." },
-        { id:"legpress",   name:"Leg Press",                      sets:3, reps:"10–12", anim:"legpress",   db:false, w:{ugur:"100-120", onur:"90-110"},
+        { id:"legpress",   name:"Leg Press",                      sets:3, reps:"10–12", anim:"legpress",   db:false, w:"100-120",
           cue:"Lower until the knee is ~90°. Lower back must stay glued to the pad — if the hips lift, you went too deep. Don't lock the knees out hard." },
-        { id:"arnold",     name:"Arnold Press",                   sets:3, reps:"10–12", anim:"arnold",     db:true,  w:{ugur:"12", onur:"10-11"},
+        { id:"arnold",     name:"Arnold Press",                   sets:3, reps:"10–12", anim:"arnold",     db:true,  w:"12",
           cue:"Start palms facing you at chin height, rotate 180° outward as you press. Elbows stay ~30° in front, ribs down." },
-        { id:"cablelat",   name:"Cable Lateral Raise",            sets:3, reps:"12–15", anim:"cablelat",   db:false, w:{ugur:null, onur:null},
+        { id:"cablelat",   name:"Cable Lateral Raise",            sets:3, reps:"12–15", anim:"cablelat",   db:false, w:null,
           cue:"Cable comes from behind the body, low pulley. Slight lean away, elbow softly bent ~15°, raise to shoulder height only." },
-        { id:"crunch",     name:"Cable Crunch + Plank",           sets:3, reps:"15 + 40s plank", anim:"crunch", db:false, w:{ugur:null, onur:null},
+        { id:"crunch",     name:"Cable Crunch + Plank",           sets:3, reps:"15 + 40s plank", anim:"crunch", db:false, w:null,
           cue:"Crunch: hips stay fixed, round the spine and bring the ribs to the pelvis — it's not a hip hinge. Plank: body in one straight line, hips neither sagging nor piked." },
       ]
     }
   ]
 };
-
-const USERS = [
-  { id:"ugur", name:"Uğur", info:"196 cm • 96 kg" },
-  { id:"onur", name:"Onur", info:"178 cm • 86 kg" },
-];
 
 const NOTES = [
   "<b>Progressive overload:</b> if you hit the top of the rep range in 2 consecutive workouts, increase the weight by 2.5–5%.",
@@ -325,41 +322,57 @@ const NOTES = [
   "<b>Waist circumference</b> is the main progress indicator — measure every 2 weeks and log it in the History tab (body weight + waist, per user).",
 ];
 
-/* ============================ STATE ============================ */
+/* ============================ STATE ============================
+   One profile per device: the person types their own name once.
+   All training data hangs off that single profile.
+============================================================== */
 const LS_KEY = "easyfitness_v1";
 let state = loadState();
 let editingEx = null; // exercise id currently in weight-edit mode
 
 function defaultState(){
   return {
-    user: null,          // chosen once, on this device
+    name: null,          // typed once on this device, then remembered
     tab: "day1",
-    weights: { ugur:{}, onur:{} },      // overrides: weights[user][exId] = "65-70"
-    sets:    { ugur:{}, onur:{} },      // sets[user][dayId][exId] = [bool,...]
-    cardio:  { ugur:{}, onur:{} },      // cardio[user][dayId] = bool
-    history: [],                        // finished workouts
-    measurements: [],                   // {date,user,weight,waist}
+    weights: {},         // weights[exId] = "65-70"
+    sets:    {},         // sets[dayId][exId] = [bool,...]
+    cardio:  {},         // cardio[dayId] = bool
+    history: [],         // finished workouts
+    measurements: [],    // {date,weight,waist}
   };
 }
 function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
     if(!raw) return defaultState();
-    return Object.assign(defaultState(), JSON.parse(raw));
+    return migrate(Object.assign(defaultState(), JSON.parse(raw)));
   }catch(e){ return defaultState(); }
+}
+// carry over data saved by the earlier two-profile version
+function migrate(s){
+  if(s.user && s.weights && (s.weights.ugur || s.weights.onur)){
+    const k = s.user;
+    s.name = k === "onur" ? "Onur" : "Uğur";
+    s.weights = s.weights[k] || {};
+    s.sets    = (s.sets   && s.sets[k])   || {};
+    s.cardio  = (s.cardio && s.cardio[k]) || {};
+    s.history = (s.history||[]).filter(h=>h.user===k);
+    s.measurements = (s.measurements||[]).filter(m=>m.user===k);
+    delete s.user;
+  }
+  return s;
 }
 function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
 function getWeight(ex){
-  const ov = state.weights[state.user][ex.id];
-  return (ov !== undefined) ? ov : ex.w[state.user];
+  const ov = state.weights[ex.id];
+  return (ov !== undefined) ? ov : ex.w;
 }
 function getSets(dayId, ex){
-  const u = state.sets[state.user];
-  if(!u[dayId]) u[dayId] = {};
-  if(!u[dayId][ex.id] || u[dayId][ex.id].length !== ex.sets)
-    u[dayId][ex.id] = Array(ex.sets).fill(false);
-  return u[dayId][ex.id];
+  if(!state.sets[dayId]) state.sets[dayId] = {};
+  const d = state.sets[dayId];
+  if(!d[ex.id] || d[ex.id].length !== ex.sets) d[ex.id] = Array(ex.sets).fill(false);
+  return d[ex.id];
 }
 
 /* ====================== WEIGHT FORMAT HELPERS ====================== */
@@ -375,7 +388,7 @@ function weightLabel(str){ return str ? str.replace(/-/g,"–") + " kg" : null; 
 
 /* ============================ RENDER ============================ */
 function render(){
-  if(!state.user){ showPicker(); return; }
+  if(!state.name){ showPicker(); return; }
   document.getElementById("picker").style.display = "none";
   renderHeader();
   const m = document.getElementById("main");
@@ -386,16 +399,26 @@ function render(){
 function showPicker(){
   const p = document.getElementById("picker");
   p.style.display = "flex";
-  p.innerHTML = `<h2>Who's training?</h2><p>Pick once — this device remembers you.</p>` +
-    USERS.map(u=>`<button onclick="pickUser('${u.id}')">${u.name}<span>${u.info}</span></button>`).join("");
+  p.innerHTML = `
+    <h2>What's your name?</h2>
+    <p>Type it once — this device will remember you.<br>Your weights and history stay on this phone.</p>
+    <input id="nameInput" class="name-input" placeholder="Your name" autocomplete="name"
+           value="${(state.name||"").replace(/"/g,'&quot;')}"
+           onkeydown="if(event.key==='Enter')confirmName()">
+    <button onclick="confirmName()">OK</button>`;
+  setTimeout(()=>{ const i=document.getElementById("nameInput"); if(i) i.focus(); },60);
 }
-function openPicker(){ state.user = null; save(); render(); }
-function pickUser(id){ state.user = id; save(); render(); }
+function confirmName(){
+  const v = document.getElementById("nameInput").value.trim();
+  if(!v){ toast("Please type a name"); return; }
+  state.name = v.slice(0,24);
+  save(); render();
+  toast("Welcome, " + state.name + "! 💪");
+}
+function openPicker(){ showPicker(); }   // tap the chip to rename — data is kept
 
 function renderHeader(){
-  const u = USERS.find(x=>x.id===state.user);
-  document.getElementById("profileChip").innerHTML = `👤 ${u.name}`;
-  document.getElementById("userInfo").textContent = u.info;
+  document.getElementById("profileChip").innerHTML = `👤 ${state.name}`;
   const tabs = PROGRAM.days.map(d =>
     `<button class="${state.tab===d.id?'active':''}" onclick="switchTab('${d.id}')">${d.short}<span class="sub">${d.title}</span></button>`).join("")
     + `<button class="${state.tab==='history'?'active':''}" onclick="switchTab('history')">History<span class="sub">Log</span></button>`;
@@ -406,7 +429,7 @@ function dayHTML(day){
   const totalSets = day.exercises.reduce((a,e)=>a+e.sets,0) + 1; // +1 cardio
   let doneSets = 0;
   day.exercises.forEach(e => { doneSets += getSets(day.id,e).filter(Boolean).length; });
-  if(state.cardio[state.user][day.id]) doneSets++;
+  if(state.cardio[day.id]) doneSets++;
   const pct = Math.round(doneSets/totalSets*100);
 
   let html = `
@@ -417,7 +440,7 @@ function dayHTML(day){
 
   html += day.exercises.map(ex => cardHTML(day, ex)).join("");
 
-  const cOn = !!state.cardio[state.user][day.id];
+  const cOn = !!state.cardio[day.id];
   html += `
     <div class="cardio ${cOn?'on':''}" onclick="toggleCardio('${day.id}')">
       <div class="chk">✓</div>
@@ -468,7 +491,6 @@ function cardHTML(day, ex){
 }
 
 /* ============================ ACTIONS ============================ */
-function switchUser(id){ state.user = id; editingEx = null; save(); render(); }
 function switchTab(id){ state.tab = id; editingEx = null; save(); render(); }
 
 function startEdit(exId){ editingEx = exId; render();
@@ -480,7 +502,7 @@ function bumpWeight(exId){ // reads current input, shifts, writes back
 }
 function saveWeight(exId){
   const v = document.getElementById("winput").value.trim();
-  state.weights[state.user][exId] = v || null;
+  state.weights[exId] = v || null;
   editingEx = null;
   save(); render();
   toast("Weight saved");
@@ -498,7 +520,7 @@ function toggleSet(dayId, exId, i){
   if(arr.every(Boolean)) toast(ex.name + " done! 💪");
 }
 function toggleCardio(dayId){
-  state.cardio[state.user][dayId] = !state.cardio[state.user][dayId];
+  state.cardio[dayId] = !state.cardio[dayId];
   save(); render();
 }
 
@@ -508,18 +530,17 @@ function finishWorkout(dayId){
     const s = getSets(dayId, ex);
     return { name: ex.name, weight: getWeight(ex), done: s.filter(Boolean).length, total: ex.sets };
   });
-  const anyDone = entries.some(e=>e.done>0) || state.cardio[state.user][dayId];
+  const anyDone = entries.some(e=>e.done>0) || state.cardio[dayId];
   if(!anyDone){ toast("No sets completed yet"); return; }
   if(!confirm("Finish this workout and save it to history?")) return;
   state.history.unshift({
     date: new Date().toISOString(),
-    user: state.user,
     dayId, dayTitle: day.short + " — " + day.title,
     exercises: entries,
-    cardioDone: !!state.cardio[state.user][dayId],
+    cardioDone: !!state.cardio[dayId],
   });
-  state.sets[state.user][dayId] = {};
-  state.cardio[state.user][dayId] = false;
+  state.sets[dayId] = {};
+  state.cardio[dayId] = false;
   stopRest();
   save(); render();
   toast("Workout saved to history 🏁");
@@ -531,9 +552,9 @@ function fmtDate(iso){
     " · " + new Date(iso).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
 }
 function historyHTML(){
-  const uName = USERS.find(u=>u.id===state.user).name;
-  const meas = state.measurements.filter(m=>m.user===state.user);
-  const hist = state.history.filter(h=>h.user===state.user);
+  const uName = state.name;
+  const meas = state.measurements;
+  const hist = state.history;
 
   let html = `
     <div class="section-title">📏 Body Measurements — ${uName}</div>
@@ -566,7 +587,7 @@ function addMeasurement(){
   const w = document.getElementById("mWeight").value.trim();
   const c = document.getElementById("mWaist").value.trim();
   if(!w && !c){ toast("Enter at least one value"); return; }
-  state.measurements.unshift({ date:new Date().toISOString(), user:state.user, weight:w, waist:c });
+  state.measurements.unshift({ date:new Date().toISOString(), weight:w, waist:c });
   save(); render();
   toast("Measurement saved 📏");
 }
