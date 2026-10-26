@@ -304,72 +304,89 @@
    on — the tracker below only *consumes* this structure.
 ===================================================================== */
 const PROGRAM = {
-  id: "ppl-3day-v1",
-  name: "3-Day Push / Pull / Legs",
+  id: "fullbody-abc-v2",
+  name: "3-Day Full Body A / B / C — Chest, Back, Arms & Glutes",
   author: "EasyFitness",
-  version: 1,
+  version: 2,
+  // Every muscle group is hit at least twice a week in 3 sessions.
+  // Priority: chest, back, arms, glutes. Legs + side delts at maintenance.
+  // w = default working weight (Uğur), wo = default for Onur (~10% lighter).
   days: [
     {
-      id: "day1", short: "Day 1", title: "Push", subtitle: "Chest • Shoulders • Triceps",
-      cardio: "15–20 min incline walk (8–12% incline)",
+      id: "day1", short: "Day A", title: "Chest + Back", subtitle: "Heavy chest • Wide back • Glutes • Arms",
+      cardio: "10 min incline walk (8–12% incline)",
       exercises: [
-        { id:"bench",      name:"Barbell Bench Press",            sets:4, reps:"6–8",   anim:"bench",      db:false, w:"65-70",
+        { id:"bench",      name:"Barbell Bench Press",            sets:4, reps:"6–8",   anim:"bench",      db:false, w:"67.5-70", wo:"60-62.5",
           cue:"Elbows ~45° to the torso, not flared to 90°. Shoulder blades pinned back, slight arch, bar to lower chest." },
-        { id:"incline",    name:"Incline Dumbbell Press",         sets:3, reps:"8–10",  anim:"incline",    db:true,  w:"22.5",
-          cue:"Bench at 30–45°. Steeper turns it into a shoulder press. Lower to upper chest, elbows under the wrists." },
-        { id:"shpress",    name:"Seated Dumbbell Shoulder Press", sets:3, reps:"8–10",  anim:"press",      db:true,  w:"20",
-          cue:"Upper arms ~30° in front of the body, not straight out to the sides. Ribs down, don't arch the lower back." },
-        { id:"latraise",   name:"Lateral Raise",                  sets:4, reps:"12–15", anim:"lateral",    db:true,  w:"10",
-          cue:"Slight forward lean, elbows softly bent ~10–20° and kept above the wrists. Stop at shoulder height, no swinging." },
-        { id:"fly",        name:"Cable Fly",                      sets:3, reps:"12–15", anim:"fly",        db:false, w:"40-45",
-          cue:"Small forward lean, elbow angle stays fixed at ~20° the whole rep. Hug motion — chest opens, shoulders stay down." },
-        { id:"pushdown",   name:"Rope Triceps Pushdown",          sets:3, reps:"10–12", anim:"pushdown",   db:false, w:"40-45",
-          cue:"Slight forward lean, upper arms glued to the ribs. Only the elbow moves, from ~90° to full lockout." },
-      ]
-    },
-    {
-      id: "day2", short: "Day 2", title: "Pull", subtitle: "Back • Lats • Biceps",
-      cardio: "15–20 min intervals (rower/bike: 1 min fast / 2 min slow)",
-      exercises: [
         { id:"pulldown",   name:"Lat Pulldown (wide grip)",       sets:4, reps:"8–10",  anim:"pulldown",   db:false, w:null,
           cue:"Lean back ~15–20° and hold it — don't rock. Bar to collarbone, elbows drive down and back, chest up." },
-        { id:"bbrow",      name:"Barbell Row",                    sets:4, reps:"8–10",  anim:"row",        db:false, w:null,
-          cue:"Hinge to ~45° torso angle, back flat, knees softly bent. Pull to the belly button, elbows ~45° — no jerking up." },
+        { id:"fly",        name:"Cable Fly",                      sets:3, reps:"12–15", anim:"fly",        db:false, w:"45", wo:"40",
+          cue:"Small forward lean, elbow angle stays fixed at ~20° the whole rep. Hug motion — chest opens, shoulders stay down." },
         { id:"cablerow",   name:"Seated Cable Row",               sets:3, reps:"10–12", anim:"seatedrow",  db:false, w:null,
           cue:"Torso stays near vertical (max ~10° sway). Knees slightly bent, pull to the navel, squeeze the shoulder blades." },
-        { id:"straightarm",name:"Straight-Arm Pulldown",          sets:3, reps:"12–15", anim:"straightarm",db:false, w:null,
-          cue:"Hinge forward ~30° at the hips — do NOT stand upright. Arms nearly straight (~10° elbow), only the shoulder moves; sweep the bar to the thighs." },
-        { id:"facepull",   name:"Face Pull",                      sets:3, reps:"15",    anim:"facepull",   db:false, w:null,
-          cue:"Cable at face height. Pull to the forehead with elbows HIGH, at shoulder level, and rotate hands back — like a double biceps pose." },
-        { id:"hammercurl", name:"Dumbbell Hammer Curl",           sets:3, reps:"10–12", anim:"curl",       db:true,  w:"15",
+        { id:"hipthrust",  name:"Barbell Hip Thrust",             sets:4, reps:"8–10",  anim:"hipthrust",  db:false, w:null,
+          cue:"Upper back on the bench edge, chin tucked. Drive through the heels, squeeze the glutes 1 s at the top — lock with the hips, not the lower back." },
+        { id:"pushdown",   name:"Rope Triceps Pushdown",          sets:3, reps:"10–12", anim:"pushdown",   db:false, w:"45", wo:"40",
+          cue:"Slight forward lean, upper arms glued to the ribs. Only the elbow moves, from ~90° to full lockout." },
+        { id:"hammercurl", name:"Dumbbell Hammer Curl",           sets:3, reps:"10–12", anim:"curl",       db:true,  w:"15", wo:"12.5",
           cue:"Elbows pinned at the ribs, neutral grip. Torso doesn't swing — the elbow travels from 180° to ~40°." },
       ]
     },
     {
-      id: "day3", short: "Day 3", title: "Legs + Shoulders", subtitle: "Legs • Shoulders • Core",
-      cardio: "15–20 min incline walk",
+      id: "day2", short: "Day B", title: "Back + Upper Chest", subtitle: "Heavy back • Upper chest • Glutes • Arms",
+      cardio: "10 min incline walk (8–12% incline)",
       exercises: [
-        { id:"squat",      name:"Squat",                          sets:4, reps:"8–10",  anim:"squat",      db:false, w:null,
-          cue:"Hips and knees bend together, chest up. Go to at least 90° knee bend (thigh parallel). Knees track over the toes, heels stay down." },
-        { id:"rdl",        name:"Romanian Deadlift",              sets:3, reps:"10–12", anim:"rdl",        db:false, w:null,
-          cue:"Hip hinge, NOT a squat: push the hips back, knees stay at a soft ~15° bend. Back flat, bar slides along the legs, stop at mid-shin." },
-        { id:"legpress",   name:"Leg Press",                      sets:3, reps:"10–12", anim:"legpress",   db:false, w:"100-120",
-          cue:"Lower until the knee is ~90°. Lower back must stay glued to the pad — if the hips lift, you went too deep. Don't lock the knees out hard." },
-        { id:"arnold",     name:"Arnold Press",                   sets:3, reps:"10–12", anim:"arnold",     db:true,  w:"12",
-          cue:"Start palms facing you at chin height, rotate 180° outward as you press. Elbows stay ~30° in front, ribs down." },
-        { id:"cablelat",   name:"Cable Lateral Raise",            sets:3, reps:"12–15", anim:"cablelat",   db:false, w:null,
-          cue:"Cable comes from behind the body, low pulley. Slight lean away, elbow softly bent ~15°, raise to shoulder height only." },
-        { id:"crunch",     name:"Cable Crunch + Plank",           sets:3, reps:"15 + 40s plank", anim:"crunch", db:false, w:null,
-          cue:"Crunch: hips stay fixed, round the spine and bring the ribs to the pelvis — it's not a hip hinge. Plank: body in one straight line, hips neither sagging nor piked." },
+        { id:"bbrow",      name:"Barbell Row",                    sets:4, reps:"6–8",   anim:"row",        db:false, w:null,
+          cue:"Hinge to ~45° torso angle, back flat, knees softly bent. Pull to the belly button, elbows ~45° — no jerking up." },
+        { id:"incline",    name:"Incline Dumbbell Press",         sets:4, reps:"8–10",  anim:"incline",    db:true,  w:"22.5", wo:"20",
+          cue:"Bench at 30–45°. Steeper turns it into a shoulder press. Lower to upper chest, elbows under the wrists." },
+        { id:"straightarm",name:"Straight-Arm Pulldown",          sets:3, reps:"12–15", anim:"straightarm",db:false, w:null,
+          cue:"Hinge forward ~30° at the hips — do NOT stand upright. Arms nearly straight (~10° elbow), only the shoulder moves; sweep the bar to the thighs." },
+        { id:"rdl",        name:"Romanian Deadlift (glute focus)",sets:3, reps:"8–10",  anim:"rdl",        db:false, w:null,
+          cue:"Push the hips BACK, knees soft ~15°, bar slides along the legs. Turn around when the hamstrings stretch, finish by squeezing the glutes." },
+        { id:"abduction",  name:"Hip Abduction Machine",          sets:3, reps:"15",    anim:"abduction",  db:false, w:null,
+          cue:"Sit tall or lean slightly forward (more glute). Push the knees out under control, pause 1 s, slow return." },
+        { id:"latraise",   name:"Lateral Raise",                  sets:3, reps:"12–15", anim:"lateral",    db:true,  w:"10", wo:"9",
+          cue:"Slight forward lean, elbows softly bent ~10–20° and kept above the wrists. Stop at shoulder height, no swinging." },
+        { id:"ezcurl",     name:"EZ Bar / Dumbbell Curl",         sets:3, reps:"8–10",  anim:"curl",       db:false, w:null,
+          cue:"Elbows stay at the sides, no hip swing. Full stretch at the bottom, squeeze at the top." },
+        { id:"ohtri",      name:"Overhead Triceps Extension",     sets:3, reps:"10–12", anim:"overhead",   db:false, w:null,
+          cue:"Elbows point up and stay narrow — only the forearm moves. Lower behind the head for a deep stretch on the long head." },
+      ]
+    },
+    {
+      id: "day3", short: "Day C", title: "Volume + Pump", subtitle: "Chest • Back • Glutes • Arms • Core",
+      cardio: "10 min incline walk (8–12% incline)",
+      exercises: [
+        { id:"chestpress", name:"Machine Chest Press",            sets:3, reps:"10–12", anim:"chestpress", db:false, w:null,
+          cue:"Handles at mid-chest height. Shoulder blades back against the pad, chest up. Press without locking hard, slow return." },
+        { id:"dips",       name:"Dips (bodyweight)",              sets:3, reps:"max",   anim:"dips",       db:false, w:null,
+          cue:"Lean forward ~15° for chest. Lower until the upper arm is parallel to the floor — no deeper if the shoulders complain." },
+        { id:"csrow",      name:"Chest-Supported Row",            sets:3, reps:"10–12", anim:"row",        db:false, w:null,
+          cue:"Chest stays glued to the pad — no body English. Pull elbows back toward the hips, squeeze the shoulder blades." },
+        { id:"cgpulldown", name:"Close-Grip Lat Pulldown",        sets:3, reps:"10–12", anim:"pulldown",   db:false, w:null,
+          cue:"Neutral close grip, slight lean back. Drive the elbows down to the ribs, feel the lats stretch at the top." },
+        { id:"splitsquat", name:"Bulgarian Split Squat",          sets:3, reps:"10 / leg", anim:"splitsquat", db:true, w:null,
+          cue:"Rear foot on the bench, torso leaned slightly FORWARD — that shifts the load to the glutes. Front heel stays down." },
+        { id:"latraise",   name:"Lateral Raise",                  sets:3, reps:"12–15", anim:"lateral",    db:true,  w:"10", wo:"9",
+          cue:"Slight forward lean, elbows softly bent ~10–20° and kept above the wrists. Stop at shoulder height, no swinging." },
+        { id:"armsuperset",name:"Superset: Curl + Rope Pushdown", sets:3, reps:"12 + 12", anim:"curl",     db:false, w:null,
+          cue:"Curl set, then straight into pushdowns with no rest. Rest after the pair. Strict form — this is the pump finisher." },
+        { id:"crunch",     name:"Cable Crunch",                   sets:3, reps:"15",    anim:"crunch",     db:false, w:null,
+          cue:"Hips stay fixed, round the spine and bring the ribs to the pelvis — it's not a hip hinge. No weighted side bends (keeps the waist narrow)." },
       ]
     }
   ]
 };
 
 const NOTES = [
-  "<b>Progressive overload:</b> if you hit the top of the rep range in 2 consecutive workouts, increase the weight by 2.5–5%.",
-  "<b>Rest:</b> 90–120 s on compound lifts, 60 s on isolation exercises.",
-  "<b>Waist circumference</b> is the main progress indicator — measure every 2 weeks and log it in the History tab (body weight + waist, per user).",
+  "<b>Order:</b> A → B → C with a rest day between sessions (e.g. Mon / Wed / Fri). Every muscle group gets hit at least twice a week.",
+  "<b>Priority:</b> chest, back, arms and glutes. Legs (quads) and side delts are at maintenance volume — don't drop them.",
+  "<b>Effort:</b> finish each working set 1–2 reps short of failure. If the last reps feel easy, the weight is too light.",
+  "<b>Progressive overload:</b> if you hit the top of the rep range on all sets in 2 consecutive workouts, increase the weight by 2.5–5%.",
+  "<b>Rest:</b> ~120 s on compound lifts (bench, rows, hip thrust, RDL), 60–90 s on isolation exercises.",
+  "<b>Waist:</b> no weighted side bends or heavy oblique work — cable crunch is enough.",
+  "<b>Track progress:</b> body weight + waist every 2 weeks in the History tab. Strength going up is the main sign the program works.",
 ];
 
 /* ============================ STATE ============================
@@ -417,7 +434,10 @@ function save(){ localStorage.setItem(LS_KEY, JSON.stringify(state)); }
 
 function getWeight(ex){
   const ov = state.weights[ex.id];
-  return (ov !== undefined) ? ov : ex.w;
+  if(ov !== undefined) return ov;
+  // Onur's defaults are ~10% lighter; everyone else starts from Uğur's numbers
+  const isOnur = /^onur/i.test((state.name||"").trim());
+  return (isOnur && ex.wo !== undefined) ? ex.wo : ex.w;
 }
 function getSets(dayId, ex){
   if(!state.sets[dayId]) state.sets[dayId] = {};
@@ -944,6 +964,13 @@ function toast(msg){
    STICK FIGURE SVG ANIMATIONS  (pure SVG + CSS keyframes, no assets)
    Moving limb / bar is highlighted in the accent color (class hl/hlf).
 ===================================================================== */
+/* SMIL tween helpers for the v2 animations: start pose -> mid-rep pose -> start. */
+const _EASE = 'calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"';
+const tw = (attr, a, b, dur="2.6s") =>
+  `<animate attributeName="${attr}" values="${a};${b};${a}" dur="${dur}" repeatCount="indefinite" ${_EASE}/>`;
+const tt = (a, b, dur="2.6s") =>
+  `<animateTransform attributeName="transform" type="translate" values="${a};${b};${a}" dur="${dur}" repeatCount="indefinite" ${_EASE}/>`;
+
 const ANIMS = {
 
 /* Side view. Torso flat on bench, elbows tuck to ~45°, bar to lower chest. */
@@ -1368,6 +1395,93 @@ crunch: () => `<svg viewBox="0 0 120 100">
     <line class="hl" x1="60" y1="50" x2="70" y2="38"/>
     <line class="cable" x1="70" y1="38" x2="89" y2="14"/>
   </g>
+</svg>`,
+
+/* ---- v2 animations: SVG SMIL tweens between two poses (start ↔ mid-rep) ---- */
+/* Hip thrust: upper back on bench, hips drive up to a straight line, knees ~90° at the top. */
+hipthrust: () => `<svg viewBox="0 0 120 100">
+  <line x1="8" y1="94" x2="112" y2="94"/>
+  <line class="gear" x1="12" y1="64" x2="36" y2="64"/>
+  <line class="gear" x1="16" y1="64" x2="16" y2="94"/><line class="gear" x1="32" y1="64" x2="32" y2="94"/>
+  <circle class="head" cx="27" cy="56" r="5.5"/>
+  <line class="guide" x1="34" y1="58" x2="96" y2="58"/>
+  <text class="deg" x="66" y="46">squeeze 1s</text>
+  <polyline class="hl" points="34,60 52,80 78,62 84,94">${tw("points","34,60 52,80 78,62 84,94","34,60 60,58 84,58 84,94")}</polyline>
+  <circle class="joint-hl" cx="52" cy="80" r="3.4">${tw("cx","52","60")}${tw("cy","80","58")}</circle>
+  <circle class="hlf" cx="52" cy="74" r="5">${tw("cx","52","60")}${tw("cy","74","52")}</circle>
+</svg>`,
+
+/* Front view, seated: knees push out against the pads. */
+abduction: () => `<svg viewBox="0 0 120 100">
+  <line x1="18" y1="94" x2="102" y2="94"/>
+  <line class="gear" x1="40" y1="66" x2="80" y2="66"/>
+  <circle class="head" cx="60" cy="24" r="6"/>
+  <line x1="60" y1="30" x2="60" y2="62"/>
+  <line x1="54" y1="62" x2="66" y2="62"/>
+  <line x1="58" y1="36" x2="50" y2="60"/><line x1="62" y1="36" x2="70" y2="60"/>
+  <polyline class="hl" points="54,62 52,78 52,94">${tw("points","54,62 52,78 52,94","54,62 36,76 40,94")}</polyline>
+  <polyline class="hl" points="66,62 68,78 68,94">${tw("points","66,62 68,78 68,94","66,62 84,76 80,94")}</polyline>
+  <text class="deg" x="6" y="58">knees out</text>
+</svg>`,
+
+/* Side view: elbows point up and stay put, forearm lowers behind the head. */
+overhead: () => `<svg viewBox="0 0 120 100">
+  <line x1="18" y1="94" x2="102" y2="94"/>
+  <circle class="head" cx="54" cy="34" r="6"/>
+  <line x1="56" y1="40" x2="58" y2="70"/>
+  <polyline points="58,70 52,94"/><polyline points="58,70 64,94"/>
+  <line x1="58" y1="44" x2="62" y2="20"/>
+  <line class="hl" x1="62" y1="20" x2="62" y2="4">${tw("x2","62","44")}${tw("y2","4","30")}</line>
+  <circle class="hlf" cx="62" cy="4" r="4">${tw("cx","62","44")}${tw("cy","4","30")}</circle>
+  <circle class="joint-hl" cx="62" cy="20" r="3.4"/>
+  <circle class="joint" cx="58" cy="44" r="3"/>
+  <text class="deg" x="74" y="34">elbow up</text>
+</svg>`,
+
+/* Parallel-bar dip: forward lean ~15°, lower to upper arm ≈ parallel. */
+dips: () => `<svg viewBox="0 0 120 100">
+  <line x1="8" y1="94" x2="112" y2="94"/>
+  <line class="gear" x1="38" y1="52" x2="88" y2="52"/>
+  <line class="gear" x1="42" y1="52" x2="42" y2="94"/><line class="gear" x1="84" y1="52" x2="84" y2="94"/>
+  <g>${tt("0 0","4 14")}
+    <circle class="head" cx="55" cy="23" r="5.5"/>
+    <line x1="58" y1="30" x2="64" y2="56"/>
+    <polyline points="64,56 68,70 78,74"/>
+    <circle class="joint" cx="58" cy="30" r="3"/>
+  </g>
+  <polyline class="hl" points="58,30 59,41 60,52">${tw("points","58,30 59,41 60,52","62,44 72,50 60,52")}</polyline>
+  <text class="deg" x="78" y="36">lean 15°</text>
+</svg>`,
+
+/* Bulgarian split squat: rear foot on bench, torso leaned forward for glutes. */
+splitsquat: () => `<svg viewBox="0 0 120 100">
+  <line x1="8" y1="94" x2="112" y2="94"/>
+  <line class="gear" x1="86" y1="74" x2="112" y2="74"/>
+  <line class="gear" x1="90" y1="74" x2="90" y2="94"/><line class="gear" x1="108" y1="74" x2="108" y2="94"/>
+  <polyline class="hl" points="58,52 48,73 40,94">${tw("points","58,52 48,73 40,94","62,66 44,74 40,94")}</polyline>
+  <polyline points="58,52 70,74 92,72">${tw("points","58,52 70,74 92,72","62,66 72,90 92,72")}</polyline>
+  <g>${tt("0 0","4 14")}
+    <line x1="58" y1="52" x2="48" y2="27"/>
+    <circle class="head" cx="45" cy="21" r="5.5"/>
+    <line x1="50" y1="32" x2="52" y2="52"/>
+    <circle class="hlf" cx="52" cy="54" r="3.5"/>
+    <circle class="joint-hl" cx="58" cy="52" r="3.4"/>
+  </g>
+  <text class="deg" x="4" y="40">lean fwd</text>
+</svg>`,
+
+/* Seated machine chest press: back on the pad, handles pushed forward at chest height. */
+chestpress: () => `<svg viewBox="0 0 120 100">
+  <line x1="8" y1="94" x2="112" y2="94"/>
+  <line class="gear" x1="30" y1="28" x2="30" y2="94"/>
+  <line class="gear" x1="30" y1="74" x2="62" y2="74"/>
+  <circle class="head" cx="37" cy="30" r="6"/>
+  <line x1="36" y1="36" x2="36" y2="70"/>
+  <polyline points="36,70 60,70 60,94"/>
+  <polyline class="hl" points="38,44 30,54 48,48">${tw("points","38,44 30,54 48,48","38,44 52,45 68,44")}</polyline>
+  <line class="hl" x1="48" y1="40" x2="48" y2="56">${tw("x1","48","68")}${tw("x2","48","68")}</line>
+  <circle class="joint" cx="38" cy="44" r="3"/>
+  <text class="deg" x="66" y="30">chest up</text>
 </svg>`,
 
 cardio: () => `<svg viewBox="0 0 120 100">
